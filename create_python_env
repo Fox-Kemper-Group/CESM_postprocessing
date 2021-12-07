@@ -167,6 +167,16 @@ cd $pp_dir
 echo "$progname - activating virtual environment in ${pp_dir}/cesm-env2."
 . cesm-env2/bin/activate
 
+
+#----------------------------------------------------------------------
+# install dependencies at default levels equivalent to cheyenne 
+# cesm_pp defaults 
+# PSH 211206
+#----------------------------------------------------------------------
+echo "Installing requirements."
+pip install -r cesm_pp_requirements.txt
+echo "Requirements installed."
+
 #----------------------------------------------------------------------
 # install post processing packages
 #----------------------------------------------------------------------
