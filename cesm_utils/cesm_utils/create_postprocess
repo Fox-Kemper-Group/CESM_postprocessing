@@ -671,7 +671,7 @@ def main(options):
         raise OSError('create_postprocess ERROR: cannot create directory {0}. Exiting...'.format(web_dirs))
     
     # set the list of components
-    compList = ['atm','ice','lnd','ocn']
+    compList = ['atm','ice','lnd','ocn','wav']
     regridList = ['atm','lnd']
     regridList = ['lnd']
     imbList = ['ilamb', 'iomb']
