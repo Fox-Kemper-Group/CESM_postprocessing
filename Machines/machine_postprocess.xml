@@ -172,6 +172,11 @@
 	<diagnostics_pes queue="regular" nodes="1" pes_per_node="16" wallclock="01:00:00">16</diagnostics_pes>
 	<obs_root>/glade/p/cesm/</obs_root>
       </component>
+      <component name="wav">
+        <averages_pes queue="regular" nodes="4" pes_per_node="4" wallclock="01:00:00">16</averages_pes>
+        <diagnostics_pes queue="regular" nodes="1" pes_per_node="16" wallclock="01:00:00">16</diagnostics_pes>
+        <obs_root>/glade/p/cesm/</obs_root>
+      </component>
       <component name="ilamb">
 	<diagnostics_pes queue="regular" nodes="1" pes_per_node="8" wallclock="00:30:00">8</diagnostics_pes>
 	<initialize_pes queue="share" nodes="1" pes_per_node="1" wallclock="00:01:00">1</initialize_pes>
