@@ -1,16 +1,16 @@
 #!/usr/bin/env python2
-"""Generate ocean climatology average files for a given CESM case 
+"""Generate wave climatology average files for a given CESM case 
 
 This script provides an interface between:
 1. the CESM case environment,
-2. the ocean diagnostics environment defined in XML files,
+2. the wave diagnostics environment defined in XML files,
 3. the Python package for averaging operations in parallel
 
 It is called from the run script and resides in the $CCSMROOT/postprocessing/cesm-env2
 __________________________
-Created on October 28, 2014
+Created on January 11, 2022
 
-Author: CSEG <cseg@cgd.ucar.edu>
+Author: Paul Hall <Paul_Hall@brown.edu>
 """
 
 from __future__ import print_function
@@ -78,10 +78,10 @@ def commandline_options():
 
 
 #====================================================================
-# buildOcnTseriesAvgList - build the list of averages to be computed
+# buildWavTseriesAvgList - build the list of averages to be computed
 #====================================================================
-def buildOcnTseriesAvgList(start_year, stop_year, avgFileBaseName, moc, main_comm, debugMsg):
-    """buildOcnTseriesAvgList - build the list of averages to be computed
+def buildWavTseriesAvgList(start_year, stop_year, avgFileBaseName, moc, main_comm, debugMsg):
+    """buildWavTseriesAvgList - build the list of averages to be computed
     by the pyAverager for timeseries. Checks if the file exists or not already.
 
     Arguments:
@@ -100,6 +100,7 @@ def buildOcnTseriesAvgList(start_year, stop_year, avgFileBaseName, moc, main_com
 
     # the following averages are necessary for model timeseries diagnostics
     # append the MOC and monthly MOC files
+    # PSH: MOC UNNECESSARY FOR WAVES?
     if (moc):
         avgFile = '{0}.{1}-{2}.moc.nc'.format(avgFileBaseName, start_year, stop_year)
         if main_comm.is_manager():
@@ -116,15 +117,15 @@ def buildOcnTseriesAvgList(start_year, stop_year, avgFileBaseName, moc, main_com
             avgListMoc.append('mocm:{0}:{1}'.format(start_year, stop_year))
 
     if main_comm.is_manager():
-        debugMsg('exit buildOcnAvgTseriesList avgList = {0}'.format(avgList), header=True, verbosity=2)
+        debugMsg('exit buildWavAvgTseriesList avgList = {0}'.format(avgList), header=True, verbosity=2)
 
     return avgList, avgListMoc
 
 #============================================================
-# buildOcnAvgList - build the list of averages to be computed
+# buildWavAvgList - build the list of averages to be computed
 #============================================================
-def buildOcnAvgList(start_year, stop_year, tavgdir, main_comm, debugMsg):
-    """buildOcnAvgList - build the list of averages to be computed
+def buildWavAvgList(start_year, stop_year, tavgdir, main_comm, debugMsg):
+    """buildWavAvgList - build the list of averages to be computed
     by the pyAverager. Checks if the file exists or not already.
 
     Arguments:
@@ -577,15 +578,15 @@ if __name__ == "__main__":
     # initialize global vprinter object for printing debug messages
     debugMsg = vprinter.VPrinter(header='', verbosity=0)
     if options.debug:
-        header = 'ocn_avg_generator: DEBUG... '
+        header = 'wav_avg_generator: DEBUG... '
         debugMsg = vprinter.VPrinter(header=header, verbosity=options.debug[0])
     
     try:
         status = main(options, main_comm, debugMsg)
         if main_comm.is_manager():
-            print('*************************************************************')
-            print(' Successfully completed generating ocean climatology averages')
-            print('*************************************************************')
+            print('************************************************************')
+            print(' Successfully completed generating wave climatology averages')
+            print('************************************************************')
         sys.exit(status)
         
     except Exception as error:
