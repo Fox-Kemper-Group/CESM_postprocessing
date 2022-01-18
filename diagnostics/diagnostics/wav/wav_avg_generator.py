@@ -49,7 +49,7 @@ def commandline_options():
     """Process the command line arguments.
     """
     parser = argparse.ArgumentParser(
-        description='ocn_avg_generator: CESM wrapper python program for ocean climatology packages.')
+        description='wav_avg_generator: CESM wrapper python program for wave climatology packages.')
 
     parser.add_argument('--backtrace', action='store_true',
                         help='show exception backtraces as extra debugging '
@@ -71,7 +71,7 @@ def commandline_options():
 
     # check to make sure CASEROOT is a valid, readable directory
     if not os.path.isdir(options.caseroot[0]):
-        err_msg = ' ERROR: ocn_avg_generator.py invalid option --caseroot {0}'.format(options.caseroot[0])
+        err_msg = ' ERROR: wav_avg_generator.py invalid option --caseroot {0}'.format(options.caseroot[0])
         raise OSError(err_msg)
 
     return options
@@ -155,7 +155,7 @@ def buildWavAvgList(start_year, stop_year, tavgdir, main_comm, debugMsg):
         avgList.append('tavg:{0}:{1}'.format(start_year, stop_year))
 
     if main_comm.is_manager():
-        debugMsg('exit buildOcnAvgList avgList = {0}'.format(avgList), header=True, verbosity=2)
+        debugMsg('exit buildWavAvgList avgList = {0}'.format(avgList), header=True, verbosity=2)
     return avgList
 
 #========================================================================
@@ -175,8 +175,8 @@ def callPyAverager(in_dir, htype, tavgdir, case_prefix, averageList, varList,
        averageList (list) - list of averages to be created
        varList (list) - list of variables. Note: an empty list implies all variables.
        tseries (boolean) - TRUE if TIMESERIES plots are specified.
-       diag_obs_root (string) - OCNDIAG_DIAGOBSROOT machine dependent path to input data root
-       netcdf_format (string) - OCNDIAG_netcdf_format one of ['netcdf', 'netcdf4', 'netcdf4c', 'netcdfLarge']
+       diag_obs_root (string) - WAVDIAG_DIAGOBSROOT machine dependent path to input data root
+       netcdf_format (string) - WAVDIAG_netcdf_format one of ['netcdf', 'netcdf4', 'netcdf4c', 'netcdfLarge']
        nlev (integer) - Number of ocean vertical levels
        timeseries_obspath (string) - timeseries observation files path
        main_comm (object) - simple MPI communicator object
@@ -291,21 +291,21 @@ def createClimFiles(start_year, stop_year, in_dir, htype, tavgdir, case, tseries
        inVarList (list) - if empty, then create climatology files for all vars, RHO, SALT and TEMP
        tseries_start_year (integer) - starting year for timeseries diagnostics 
        tseries_stop_year (integer) - stop year for timeseries diagnostics
-       diag_obs_root (string) - OCNDIAG_DIAGOBSROOT machine dependent path to input data root
-       netcdf_format (string) - OCNDIAG_netcdf_format one of ['netcdf', 'netcdf4', 'netcdf4c', 'netcdfLarge']
+       diag_obs_root (string) - WAVDIAG_DIAGOBSROOT machine dependent path to input data root
+       netcdf_format (string) - WAVDIAG_netcdf_format one of ['netcdf', 'netcdf4', 'netcdf4c', 'netcdfLarge']
        nlev (integer) - Number of ocean vertical levels
        timeseries_obspath (string) - timeseries observation files path
        main_comm (object) - simple MPI communicator object
 
     """
     # create the list of averages to be computed
-    avgFileBaseName = '{0}/{1}.pop.h'.format(tavgdir,case)
-    case_prefix = '{0}.pop.h'.format(case)
+    avgFileBaseName = '{0}/{1}.wav.h'.format(tavgdir,case)
+    case_prefix = '{0}.wav.h'.format(case)
     averageList = []
     avgList = []
 
     # create the list of averages to be computed by the pyAverager
-    averageList = buildOcnAvgList(start_year, stop_year, tavgdir, main_comm, debugMsg)
+    averageList = buildWavAvgList(start_year, stop_year, tavgdir, main_comm, debugMsg)
 
     # if the averageList is empty, then all the climatology files exist with all variables
     if len(averageList) > 0:
@@ -342,13 +342,13 @@ def createClimFiles(start_year, stop_year, in_dir, htype, tavgdir, case, tseries
     if tseries:
         # create the list of averages to be computed by the pyAverager
         if 'MOC' in inVarList:
-            averageList, averageListMoc = buildOcnTseriesAvgList(start_year=tseries_start_year, 
+            averageList, averageListMoc = buildWavTseriesAvgList(start_year=tseries_start_year, 
                                                                  stop_year=tseries_stop_year, 
                                                                  avgFileBaseName=avgFileBaseName, 
                                                                  moc=True, 
                                                                  main_comm=main_comm, debugMsg=debugMsg)
         else:
-            averageList, averageListMoc = buildOcnTseriesAvgList(start_year=tseries_start_year, 
+            averageList, averageListMoc = buildWavTseriesAvgList(start_year=tseries_start_year, 
                                                                  stop_year=tseries_stop_year, 
                                                                  avgFileBaseName=avgFileBaseName, 
                                                                  moc=False, 
@@ -405,7 +405,7 @@ def initialize_envDict(envDict, caseroot, debugMsg, standalone):
     envDict (dictionary) - environment dictionary
     """
     # setup envDict['id'] = 'value' parsed from the CASEROOT/[env_file_list] files
-    env_file_list =  ['./env_postprocess.xml', './env_diags_ocn.xml']
+    env_file_list =  ['./env_postprocess.xml', './env_diags_wav.xml']
     envDict = cesmEnvLib.readXML(caseroot, env_file_list)
 
     # debug print out the envDict
@@ -417,20 +417,20 @@ def initialize_envDict(envDict, caseroot, debugMsg, standalone):
     envDict['CASEROOT'] = caseroot
 
     # add the os.environ['PATH'] to the envDict['PATH']
-    envDict['OCNDIAG_PATH'] += os.pathsep + os.environ['PATH']
+    envDict['WAVDIAG_PATH'] += os.pathsep + os.environ['PATH']
 
     # initialize varLists
     envDict['MODEL_VARLIST'] = []
-    if len(envDict['OCNDIAG_PYAVG_MODELCASE_VARLIST']) > 0:
-        envDict['MODEL_VARLIST'] = envDict['OCNDIAG_PYAVG_MODELCASE_VARLIST'].split(',')
+    if len(envDict['WAVDIAG_PYAVG_MODELCASE_VARLIST']) > 0:
+        envDict['MODEL_VARLIST'] = envDict['WAVDIAG_PYAVG_MODELCASE_VARLIST'].split(',')
 
     envDict['CNTRL_VARLIST'] = []
-    if len(envDict['OCNDIAG_PYAVG_CNTRLCASE_VARLIST']) > 0:
-        envDict['CNTRL_VARLIST'] = envDict['OCNDIAG_PYAVG_CNTRLCASE_VARLIST'].split(',')
+    if len(envDict['WAVDIAG_PYAVG_CNTRLCASE_VARLIST']) > 0:
+        envDict['CNTRL_VARLIST'] = envDict['WAVDIAG_PYAVG_CNTRLCASE_VARLIST'].split(',')
     
-    # strip the OCNDIAG_ prefix from the envDict entries before setting the 
+    # strip the WAVDIAG_ prefix from the envDict entries before setting the 
     # enviroment to allow for compatibility with all the diag routine calls
-    envDict = diagUtilsLib.strip_prefix(envDict, 'OCNDIAG_')
+    envDict = diagUtilsLib.strip_prefix(envDict, 'WAVDIAG_')
 
     return envDict
 
@@ -446,8 +446,8 @@ def main(options, main_comm, debugMsg):
     main_comm (object) - MPI simple communicator object
     debugMsg (object) - vprinter object for printing debugging messages
 
-    The env_diags_ocn.xml configuration file defines the way the diagnostics are generated. 
-    See (website URL here...) for a complete desciption of the env_diags_ocn XML options.
+    The env_diags_wav.xml configuration file defines the way the diagnostics are generated. 
+    See (website URL here...) for a complete desciption of the env_diags_wav XML options.
     """
 
     # initialize the environment dictionary
@@ -468,11 +468,11 @@ def main(options, main_comm, debugMsg):
     # generate the climatology files used for all plotting types using the pyAverager
     if main_comm.is_manager():
         debugMsg('calling checkHistoryFiles for model case', header=True)
-        suffix = 'pop.h.*.nc'
-        file_pattern = '.*\.pop\.h\.\d{4,4}-\d{2,2}\.nc'
+        suffix = 'wav.h.*.nc'
+        file_pattern = '.*\.wav\.h\.\d{4,4}-\d{2,2}\.nc'
         start_year, stop_year, in_dir, htype, firstHistoryFile = diagUtilsLib.checkHistoryFiles(
             envDict['MODELCASE_INPUT_TSERIES'], envDict['DOUT_S_ROOT'], envDict['CASE'],
-            envDict['YEAR0'], envDict['YEAR1'], 'ocn', suffix, file_pattern, envDict['MODELCASE_SUBDIR'])
+            envDict['YEAR0'], envDict['YEAR1'], 'wav', suffix, file_pattern, envDict['MODELCASE_SUBDIR'])
         envDict['YEAR0'] = start_year
         envDict['YEAR1'] = stop_year
         envDict['in_dir'] = in_dir
@@ -493,7 +493,7 @@ def main(options, main_comm, debugMsg):
             tseries_start_year, tseries_stop_year, in_dir, htype, firstHistoryFile = \
                 diagUtilsLib.checkHistoryFiles(envDict['MODELCASE_INPUT_TSERIES'], envDict['DOUT_S_ROOT'], 
                                                envDict['CASE'], envDict['TSERIES_YEAR0'], 
-                                               envDict['TSERIES_YEAR1'], 'ocn', suffix, file_pattern,
+                                               envDict['TSERIES_YEAR1'], 'wav', suffix, file_pattern,
                                                envDict['MODELCASE_SUBDIR'])
             debugMsg('timeseries years after checkHistoryFiles {0} - {1}'.format(envDict['TSERIES_YEAR0'], envDict['TSERIES_YEAR1']), header=True)
             envDict['TSERIES_YEAR0'] = tseries_start_year
@@ -526,11 +526,11 @@ def main(options, main_comm, debugMsg):
 
         if main_comm.is_manager():
             debugMsg('calling checkHistoryFiles for control case', header=True)
-            suffix = 'pop.h.*.nc'
-            file_pattern = '.*\.pop\.h\.\d{4,4}-\d{2,2}\.nc'
+            suffix = 'wav.h.*.nc'
+            file_pattern = '.*\.wav\.h\.\d{4,4}-\d{2,2}\.nc'
             start_year, stop_year, in_dir, htype, firstHistoryFile = diagUtilsLib.checkHistoryFiles(
                 envDict['CNTRLCASE_INPUT_TSERIES'], envDict['CNTRLCASEDIR'], envDict['CNTRLCASE'], 
-                envDict['CNTRLYEAR0'], envDict['CNTRLYEAR1'], 'ocn', suffix, file_pattern,
+                envDict['CNTRLYEAR0'], envDict['CNTRLYEAR1'], 'wav', suffix, file_pattern,
                 envDict['CNTRLCASE_SUBDIR'])
             envDict['CNTRLYEAR0'] = start_year
             envDict['CNTRLYEAR1'] = stop_year
