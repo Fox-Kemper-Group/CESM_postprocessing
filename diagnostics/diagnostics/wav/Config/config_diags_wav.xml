@@ -3,11 +3,11 @@
 <config_definition version="1.0">
   <!-- =========================================================================== -->
   <!-- Ocean Model Working Group Diagnostics XML                                   -->
-  <!-- settings read by ocn_diags_generator.py  and pythonplotting classes         -->
+  <!-- settings read by wav_diags_generator.py  and pythonplotting classes         -->
   <!-- NOTE: case specific environment variables from env_*.xml will be            -->
-  <!-- gathered at runtime by the ocn_diags_generator.py python script.            -->
+  <!-- gathered at runtime by the wav_diags_generator.py python script.            -->
   <!-- They do not need to be specified in this XML file.                          -->
-  <!-- The full $PATH variable will be set in the ocn_diags_generator.py file      -->
+  <!-- The full $PATH variable will be set in the wav_diags_generator.py file      -->
   <!-- using all the path settings defined here.                                   -->
   <!-- =========================================================================== -->
 
@@ -133,7 +133,7 @@ Applies to both model and control cases."
 	     valid_values="TRUE/FALSE"
 	     value="FALSE"
 	     group="diags_types"
-	     desc="True or false to control if model vs. control diagnostics are generated. If true, then all OCNDIAG_CNTRL* XML variables will need to be set correctly."
+	     desc="True or false to control if model vs. control diagnostics are generated. If true, then all WAVDIAG_CNTRL* XML variables will need to be set correctly."
 	     ></entry>
 
       <entry id="WAVDIAG_MODEL_VS_CONTROL_ECOSYS"
@@ -141,7 +141,7 @@ Applies to both model and control cases."
 	     valid_values="TRUE/FALSE"
 	     value="FALSE"
 	     group="diags_types"
-	     desc="True or false to control if model vs. control ecosystem diagnostics are generated.	If true, then all OCNDIAG_CNTRL* XML variables will need to be set correctly. ** NOTE ** ecosystem diagnostics are not currently working."
+	     desc="True or false to control if model vs. control ecosystem diagnostics are generated.	If true, then all WAVDIAG_CNTRL* XML variables will need to be set correctly. ** NOTE ** ecosystem diagnostics are not currently working."
 	     ></entry>
 
       <entry id="WAVDIAG_MODEL_TIMESERIES"
@@ -194,7 +194,7 @@ Applies to both model and control cases."
 	     valid_values=""
 	     value="$WAVDIAG_DIAGOBSROOT/omwg/obs_data"
 	     group="observations"
-	     desc="This value points to the local machine's fully qualified directory path location of the OMWG observational data. The ocn_diags_generator.py script will error out if this directory is not available."
+	     desc="This value points to the local machine's fully qualified directory path location of the OMWG observational data. The wav_diags_generator.py script will error out if this directory is not available."
 	     ></entry>
 
       <entry id="WAVDIAG_TIMESERIES_OBSPATH"
@@ -210,7 +210,7 @@ Applies to both model and control cases."
 	     valid_values=""
 	     value="$WAVDIAG_DIAGOBSROOT/bgcwg/obgc_diag"
 	     group="observations"
-	     desc="This value points to the local machine's fully qualified directory path location of the BGCWG observational data. The ocn_diags_generator.py script will error out if this directory is not available."
+	     desc="This value points to the local machine's fully qualified directory path location of the BGCWG observational data. The wav_diags_generator.py script will error out if this directory is not available."
 	     ></entry>
 
       <entry id="WAVDIAG_FLUXOBSDIR_CPL6"
@@ -304,7 +304,7 @@ Applies to both model and control cases."
       <entry id="WAVDIAG_TOBSFILE"
 	     type="char"
 	     valid_values=""
-	     value="PHC2_TEMP_($WAV_GRID)_($OCNDIAG_VERTICAL)lev_ann_avg.nc"
+	     value="PHC2_TEMP_($WAV_GRID)_($WAVDIAG_VERTICAL)lev_ann_avg.nc"
 	     group="observations"
 	     desc="Local machine file for temperature observations"
 	     ></entry>
@@ -400,7 +400,7 @@ Applies to both model and control cases."
       <entry id="WAVDIAG_SCLIMFILE"
 	     type="char"
 	     valid_values=""
-	     value="PHC2_SALT_($OCN_GRID)_ann_avg.nc"
+	     value="PHC2_SALT_($WAV_GRID)_ann_avg.nc"
 	     group="observations"
 	     desc="Local machine file for OMWG diagnostics PHC2 salinity file"
 	     ></entry>
@@ -639,7 +639,7 @@ Applies to both model and control cases."
 	     valid_values=""
 	     value="1"
 	     group="timeseries_options"
-	     desc="Model start year for timeseries diagnostics. If not set, defaults to OCNDIAG_YEAR0."
+	     desc="Model start year for timeseries diagnostics. If not set, defaults to WAVDIAG_YEAR0."
 	     ></entry>
 
       <entry id="WAVDIAG_TSERIES_YEAR1"
@@ -647,7 +647,7 @@ Applies to both model and control cases."
 	     valid_values=""
 	     value="10"
 	     group="timeseries_options"
-	     desc="Model end year for timeseries diagnostics. If not set, default to OCNDIAG_YEAR1."
+	     desc="Model end year for timeseries diagnostics. If not set, default to WAVDIAG_YEAR1."
 	     ></entry>
 
       <entry id="WAVDIAG_MOC0"
