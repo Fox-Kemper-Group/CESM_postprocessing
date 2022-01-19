@@ -8,7 +8,7 @@ This script provides an interface between:
 
 It is called from the run script and resides in the $CCSMROOT/postprocessing/cesm-env2
 __________________________
-Created on January 11, 2022
+Created (modified from ocn version) on January 11, 2022
 
 Author: Paul Hall <Paul_Hall@brown.edu>
 """
@@ -468,8 +468,8 @@ def main(options, main_comm, debugMsg):
     # generate the climatology files used for all plotting types using the pyAverager
     if main_comm.is_manager():
         debugMsg('calling checkHistoryFiles for model case', header=True)
-        suffix = 'wav.h.*.nc'
-        file_pattern = '.*\.wav\.h\.\d{4,4}-\d{2,2}\.nc'
+        suffix = 'ww3.h.*.nc'
+        file_pattern = '.*\.ww3\.h\.\d{4,4}-\d{2,2}\.nc'
         start_year, stop_year, in_dir, htype, firstHistoryFile = diagUtilsLib.checkHistoryFiles(
             envDict['MODELCASE_INPUT_TSERIES'], envDict['DOUT_S_ROOT'], envDict['CASE'],
             envDict['YEAR0'], envDict['YEAR1'], 'wav', suffix, file_pattern, envDict['MODELCASE_SUBDIR'])
