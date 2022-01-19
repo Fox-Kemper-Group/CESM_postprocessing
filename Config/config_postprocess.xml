@@ -107,6 +107,14 @@
 	     desc="Ocean model grid"
 	     ></entry> 
 
+      <entry id="WAV_GRID"
+             type="string"
+             valid_values="gx1v6"   
+             value="inherit"
+             group="case_info"
+             desc="Wave model grid"
+             ></entry>
+
       <entry id="CESM_TAG"
 	     type="string"
 	     valid_values="cesm2_0"  
