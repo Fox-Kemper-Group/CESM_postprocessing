@@ -468,8 +468,8 @@ def main(options, main_comm, debugMsg):
     # generate the climatology files used for all plotting types using the pyAverager
     if main_comm.is_manager():
         debugMsg('calling checkHistoryFiles for model case', header=True)
-        suffix = 'ww3.h.*.nc'
-        file_pattern = '.*\.ww3\.h\.\d{4,4}-\d{2,2}\.nc'
+        suffix = 'ww3.hi.*.nc'
+        file_pattern = '.*\.ww3\.hi\.\d{4,4}-\d{2,2}-\d{2,2}-\d{5,5}\.nc'
         start_year, stop_year, in_dir, htype, firstHistoryFile = diagUtilsLib.checkHistoryFiles(
             envDict['MODELCASE_INPUT_TSERIES'], envDict['DOUT_S_ROOT'], envDict['CASE'],
             envDict['YEAR0'], envDict['YEAR1'], 'wav', suffix, file_pattern, envDict['MODELCASE_SUBDIR'])
@@ -526,8 +526,8 @@ def main(options, main_comm, debugMsg):
 
         if main_comm.is_manager():
             debugMsg('calling checkHistoryFiles for control case', header=True)
-            suffix = 'wav.h.*.nc'
-            file_pattern = '.*\.wav\.h\.\d{4,4}-\d{2,2}\.nc'
+            suffix = 'ww3.hi.*.nc'
+            file_pattern = '.*\.ww3\.hi\.\d{4,4}-\d{2,2}-\d{2,2}-\d{5,5}\.nc'
             start_year, stop_year, in_dir, htype, firstHistoryFile = diagUtilsLib.checkHistoryFiles(
                 envDict['CNTRLCASE_INPUT_TSERIES'], envDict['CNTRLCASEDIR'], envDict['CNTRLCASE'], 
                 envDict['CNTRLYEAR0'], envDict['CNTRLYEAR1'], 'wav', suffix, file_pattern,
